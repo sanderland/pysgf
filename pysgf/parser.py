@@ -27,6 +27,9 @@ class Move:
         else:
             self.properties[prop] = value
 
+    def __getitem__(self, ix):
+        return self.properties.get(ix)
+
 
 class SGF:
     def __init__(self, contents):

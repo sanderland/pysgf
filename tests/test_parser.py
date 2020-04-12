@@ -3,8 +3,11 @@ import os
 
 
 def test_simple():
-    tree = SGF.parse("(;GM[1]FF[4]SZ[19]DT[2020-04-12]AB[dd][dj];B[dp];W[pp];B[pj])")
-    assert "Move({'GM': '1', 'FF': '4', 'SZ': 19, 'DT': '2020-04-12', 'AB': ['dd', 'dj']})\n\tMove({'B': 'dp'})\n\t\tMove({'W': 'pp'})\n\t\t\tMove({'B': 'pj'})" == str(tree)
+    root = SGF.parse("(;GM[1]FF[4]SZ[19]DT[2020-04-12]AB[dd][dj];B[dp];W[pp];B[pj])")
+    assert "4" == root["FF"]
+    assert root["XYZ"] is None
+    assert "dp" == root.children[0]["B"]
+    assert "Move({'GM': '1', 'FF': '4', 'SZ': 19, 'DT': '2020-04-12', 'AB': ['dd', 'dj']})\n\tMove({'B': 'dp'})\n\t\tMove({'W': 'pp'})\n\t\t\tMove({'B': 'pj'})" == str(root)
 
 
 def test_branch():
@@ -67,9 +70,9 @@ def test_pandanet():
             'ip', 'io', 'in', 'ig', 'if', 'ie', 'id', 'ic', 'ib', 'ia', 'jq', 'jp', 'jo', 'jn',
             'jm', 'jl', 'jk', 'jj', 'ko', 'kn', 'km', 'kl', 'kk', 'po', 'qq', 'qp', 'qo', 'qn',
             'qe', 'rs', 'rr', 'rq', 'rp', 'ro', 'rn', 're', 'rd', 'rc', 'rb', 'ra', 'ss', 'sr',
-            'sq', 'sp', 'so', 'sn', 'sm', 'se', 'sd', 'sc', 'sb', 'sa'] == move.properties["TW"]
+            'sq', 'sp', 'so', 'sn', 'sm', 'se', 'sd', 'sc', 'sb', 'sa'] == move["TW"]
 
-    assert "Trilan" == move.properties["OS"]
+    assert "Trilan" == move["OS"]
 
 
 def test_ogs():
