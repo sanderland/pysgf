@@ -1,5 +1,5 @@
 import re
-from typing import Dict, List, Any
+from typing import Any, Dict, List
 
 
 class ParseError(Exception):
@@ -61,14 +61,14 @@ class SGF:
     @staticmethod
     def parse_file(filename, encoding=None) -> Move:
         with open(filename, "rb") as f:
-            str = f.read()
+            bin_contents = f.read()
             if not encoding:
-                match = re.search(rb"CA\[(.*?)\]", str)
+                match = re.search(rb"CA\[(.*?)\]", bin_contents)
                 if match:
                     encoding = match[1].decode("ascii")
                 else:
                     encoding = "utf-8"  # default
-            decoded = str.decode(encoding=encoding)
+            decoded = bin_contents.decode(encoding=encoding)
             return SGF.parse(decoded)
 
     def _parse_branch(self) -> Move:

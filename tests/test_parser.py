@@ -1,5 +1,6 @@
-from pysgf import SGF, Move
 import os
+
+from pysgf import SGF, Move
 
 
 def test_simple():
