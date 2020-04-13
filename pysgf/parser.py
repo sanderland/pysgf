@@ -1,5 +1,5 @@
 import re
-from typing import Tuple, List, Union
+from typing import Dict, List, Any
 
 
 class ParseError(Exception):
@@ -7,44 +7,59 @@ class ParseError(Exception):
 
 
 class Move:
+    CAST_FIELDS = {"KM": float, "SZ": int}  # cast property to this type
+    LIST_FIELDS = ["AB", "AW", "TW", "TB"]  # cast these properties to lists
+
     def __init__(self):
-        self.children = []
-        self.properties = {}
+        self.children = []  # type: List[Move]
+        self.properties = {}  # type: Dict[str,Any]
 
-    def __str__(self):
-        return "\n".join([f"Move({self.properties})"] + [f"\t{l}" for m in self.children for l in str(m).split("\n")])
+    def __str__(self) -> str:
+        return f"(;{self._node_sgf()})"
 
-    def empty(self):
+    def empty(self) -> bool:
         return not self.children and not self.properties
 
-    def set_property(self, prop, value):
-        if prop in ["AB", "AW", "TW", "TB"]:  # lists (placements, marked dead)
+    def __setitem__(self, prop: str, value: str):
+        if prop in self.LIST_FIELDS and isinstance(value, str):  # lists (placements, IGS marked dead stones)
             self.properties[prop] = re.split(r"\]\s*\[", value)
-        elif prop in ["KM"]:  # floats
-            self.properties[prop] = float(value)
-        elif prop in ["SZ"]:  # ints
-            self.properties[prop] = int(value)
+        elif prop in self.CAST_FIELDS:
+            self.properties[prop] = self.CAST_FIELDS[prop](value)
         else:
             self.properties[prop] = value
 
-    def __getitem__(self, ix):
+    def __getitem__(self, ix) -> Any:
         return self.properties.get(ix)
+
+    def _node_sgf(self) -> str:
+        move_props = "".join([f"{k}[{']['.join(v) if isinstance(v,list) else v}]" for k, v in self.properties.items()])
+        if not self.children:
+            return move_props
+        else:
+            children = [c._node_sgf() for c in self.children]
+            if len(children) == 1:
+                return move_props + ";" + children[0]
+            else:
+                return move_props + "(;" + ")(;".join(children) + ")"
 
 
 class SGF:
+    _MOVE_CLASS = Move
+
     def __init__(self, contents):
         self.contents = contents
-        self.ix = 0
-        if self._nextchr() != "(":
-            raise ParseError("Expected '(' at start of input")
+        try:
+            self.ix = self.contents.index("(") + 1
+        except ValueError:
+            raise ParseError("Parse error: Expected '('")
         self.root = self._parse_branch()
 
     @staticmethod
-    def parse(input_str):
+    def parse(input_str) -> Move:
         return SGF(input_str).root
 
     @staticmethod
-    def parse_file(filename, encoding=None):
+    def parse_file(filename, encoding=None) -> Move:
         with open(filename, "rb") as f:
             str = f.read()
             if not encoding:
@@ -56,38 +71,29 @@ class SGF:
             decoded = str.decode(encoding=encoding)
             return SGF.parse(decoded)
 
-    def _nextchr(self, ignore_whitespace=True) -> str:
-        c = self.contents[self.ix]
-        while ignore_whitespace and c in [" ", "\n", "\r", "\t"]:
-            self.ix += 1
-            c = self.contents[self.ix]
-        self.ix += 1
-        return c
-
     def _parse_branch(self) -> Move:
-        move_tree = Move()
+        move_tree = self._MOVE_CLASS()
         current_move = move_tree
 
-        while self.ix < len(self.contents):
-            c = self._nextchr()
-            if c == ")":
+        while self.ix < len(self.contents):  # https://xkcd.com/1171/
+            match = re.match(r"\s*(?:\(|\)|;|(?:(\w+)((?:\[.*?(?<!\\)\]\s*)+)))", self.contents[self.ix :], re.DOTALL)
+            if not match:
+                break
+            self.ix += len(match[0])
+            if match[0] == ")":
                 return move_tree
-            if c == "(":
+            if match[0] == "(":
                 current_move.children.append(self._parse_branch())
-            elif c == ";":
+            elif match[0] == ";":
                 if not current_move.empty():  # ignore ; that generate empty nodes
-                    nextmove = Move()
-                    current_move.children.append(nextmove)
-                    current_move = nextmove
+                    next_move = self._MOVE_CLASS()
+                    current_move.children.append(next_move)
+                    current_move = next_move
             else:
-                self.ix -= 1
-                prop, value = self.parse_property()
-                current_move.set_property(prop, value)
-        raise ParseError("Expected ')' at end of input")
-
-    def parse_property(self) -> Tuple[str, str]:
-        match = re.match(r"(\w+)((?:\[.*?(?<!\\)\]\s*)+)", self.contents[self.ix :], re.DOTALL)
-        if not match:
-            raise ParseError(f"Parse Error (expected property) at {self.contents[self.ix-25:self.ix]}>{self.contents[self.ix]}<{self.contents[self.ix+1:self.ix+25]}")
-        self.ix += len(match[0])
-        return match[1], match[2].strip()[1:-1]
+                prop, value = match[1], match[2].strip()[1:-1]
+                current_move[prop] = value
+        if self.ix < len(self.contents):
+            raise ParseError(
+                f"Parse Error: unexpected character at {self.contents[self.ix - 25:self.ix]}>{self.contents[self.ix]}<{self.contents[self.ix + 1:self.ix + 25]}"
+            )
+        raise ParseError("Parse Error: expected ')' at end of input.")
