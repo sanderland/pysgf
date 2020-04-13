@@ -1,6 +1,6 @@
 import os
 
-from pysgf import SGF, Move
+from pysgf import SGF
 
 
 def test_simple():
@@ -29,7 +29,7 @@ or \\]
 
 def test_alphago():
     file = os.path.join(os.path.dirname(__file__), "data/LS vs AG - G4 - English.sgf")
-    tree = SGF.parse_file(file)
+    SGF.parse_file(file)
 
 
 def test_pandanet():
