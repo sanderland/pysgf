@@ -1,0 +1,32 @@
+[tool.poetry]
+name = "pysgf"
+version = "0.5.0"
+description = "Simple SGF parser"
+authors = ["Sander Land <https://github.com/sanderland/>"]
+
+packages = [
+    { include="pysfg", from="." },
+]
+
+[tool.black]
+line-length=120
+target_version = ['py37']
+include = '\.py$'
+
+[tool.isort]
+line_length=120                # corresponds to -w  flag
+multi_line_output=3            # corresponds to -m  flag
+include_trailing_comma=true    # corresponds to -tc flag
+skip_glob = '^((?!py$).)*$'    # sort all Python files
+
+[tool.poetry.dependencies]
+python = "^3.6"
+
+[tool.poetry.dev-dependencies]
+black = "^19.3b0"
+isort = "^4.3"
+pytest = "^5.2"
+
+[build-system]
+requires = ["poetry>=1.0"]
+build-backend = "poetry.masonry.api"
