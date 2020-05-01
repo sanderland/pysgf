@@ -6,16 +6,16 @@ from pysgf import SGF
 def test_simple():
     input_sgf = "(;GM[1]FF[4]SZ[19]DT[2020-04-12]AB[dd][dj];B[dp];W[pp];B[pj])"
     root = SGF.parse(input_sgf)
-    assert "4" == root["FF"]
-    assert root["XYZ"] is None
-    assert "dp" == root.children[0]["B"]
-    assert input_sgf == str(root)
+    assert "4" == root.get_property("FF")
+    assert root.get_property("XYZ") is None
+    assert "dp" == root.children[0].get_property("B")
+    assert input_sgf == root.sgf()
 
 
 def test_branch():
     input_sgf = "(;GM[1]FF[4]CA[UTF-8]AP[Sabaki:0.43.3]KM[6.5]SZ[19]DT[2020-04-12]AB[dd][dj](;B[dp];W[pp](;B[pj])(;PL[B]AW[jp]C[sdfdsfdsf]))(;B[pd]))"
     root = SGF.parse(input_sgf)
-    assert input_sgf == str(root)
+    assert input_sgf == root.sgf()
 
 
 def test_weird_escape():
@@ -24,7 +24,7 @@ def test_weird_escape():
 or \\]
 ])"""
     root = SGF.parse(input_sgf)
-    assert input_sgf == str(root)
+    assert input_sgf == root.sgf()
 
 
 def test_alphago():
@@ -64,9 +64,11 @@ def test_pandanet():
     move = root
     while move.children:
         move = move.children[0]
-    assert 94 == len(move["TW"])
-    assert "Trilan" == move["OS"]
-
+    assert 94 == len(move.get_list_property("TW"))
+    assert "Trilan" == move.get_property("OS")
+    while move.parent:
+        move = move.parent
+    assert move is root
 
 def test_ogs():
     file = os.path.join(os.path.dirname(__file__), "data/ogs.sgf")

@@ -1,2 +1,2 @@
 # pysgf
-Small and simple SGF parser for python
+SGF parser for python.
