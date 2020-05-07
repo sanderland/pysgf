@@ -2,7 +2,7 @@
 name = "pysgf"
 version = "0.7.0"
 description = "Simple SGF parser"
-authors = ["Sander Land <https://github.com/sanderland/>"]
+authors = ["Sander Land"]
 
 [tool.black]
 line-length=120
