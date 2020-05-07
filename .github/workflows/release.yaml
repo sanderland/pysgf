@@ -40,4 +40,4 @@ jobs:
       env:
         TWINE_USERNAME: __TOKEN__
         TWINE_PASSWORD: ${{ secrets.PYPI_TOKEN }}
-      run: twine upload --verbose dist/* || echo 'Version exists'
+      run: twine upload --verbose dist/*
