@@ -1,12 +1,8 @@
 [tool.poetry]
 name = "pysgf"
-version = "0.6.0"
+version = "0.7.0"
 description = "Simple SGF parser"
 authors = ["Sander Land <https://github.com/sanderland/>"]
-
-packages = [
-    { include="pysfg", from="." },
-]
 
 [tool.black]
 line-length=120
@@ -24,9 +20,12 @@ known_third_party = []
 python = "^3.6"
 
 [tool.poetry.dev-dependencies]
-black = "^19.3b0"
+black = "^19.10b0"
 isort = "^4.3"
 pytest = "^5.2"
+sphinx = "^2.4.4"
+sphinx-rtd-theme = "^0.4.3"
+twine = "^3.1.1"
 
 [build-system]
 requires = ["poetry>=1.0"]
