@@ -70,6 +70,7 @@ def test_pandanet():
         move = move.parent
     assert move is root
 
+
 def test_ogs():
     file = os.path.join(os.path.dirname(__file__), "data/ogs.sgf")
     tree = SGF.parse_file(file)
