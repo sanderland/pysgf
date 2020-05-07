@@ -6,6 +6,7 @@ from typing import Any, Dict, List, Optional, Tuple
 
 class ParseError(Exception):
     """Exception raised on a parse error"""
+
     pass
 
 
@@ -266,6 +267,7 @@ class SGFNode:
 
 class SGF:
     """Class used for SGF Nodes, can change this to something that inherits from SGFNode"""
+
     _NODE_CLASS = SGFNode
 
     @classmethod
