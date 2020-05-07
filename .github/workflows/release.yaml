@@ -38,6 +38,6 @@ jobs:
 
     - name: Release to PyPI
       env:
-        TWINE_USERNAME: __TOKEN__
-        TWINE_PASSWORD: ${{ secrets.PYPI_TOKEN }}
+        TWINE_USERNAME: ${{ secrets.PYPI_USER }}
+        TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
       run: twine upload --verbose dist/*
