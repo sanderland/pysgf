@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "pysgf"
-version = "0.7.0"
+version = "0.8.0"
 description = "Simple SGF parser"
 authors = ["Sander Land"]
 
