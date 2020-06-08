@@ -23,9 +23,3 @@ children = root.children # returns all child nodes
 
 ## Documentation
 For documentation, run `make html` in the `docs` directory.
-
-
-
-
-
-
