@@ -30,7 +30,7 @@ pip install sphinx sphinx_rtd_theme
 2. Clone this repository
 ```shell
 git clone https://github.com/sanderland/pysgf.git
-cd sanderland/pysgf/docs
+cd pysgf/docs
 ```
 
 3. Run the makefile
