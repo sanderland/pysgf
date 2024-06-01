@@ -7,7 +7,10 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
+    permissions:
+      contents: "read"
+      id-token: "write"
+  
     steps:
     - uses: actions/checkout@v2
 
@@ -30,14 +33,12 @@ jobs:
     - name: Run tests
       run: pytest -v tests
 
-    - name: Build package
-      run: poetry build
-
     - name: Build docs
       run: cd docs && make html
 
     - name: Release to PyPI
       env:
-        TWINE_USERNAME: ${{ secrets.PYPI_USER }}
-        TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
-      run: twine upload --verbose dist/* || echo 'File exists'
+        PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
+      run: |
+          poetry config pypi-token.pypi $PYPI_TOKEN
+          poetry publish --build
