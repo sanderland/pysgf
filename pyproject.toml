@@ -6,7 +6,7 @@ authors = ["Sander Land"]
 
 [tool.black]
 line-length=120
-target_version = ['py311']
+target_version = ['py39']
 include = '\.py$'
 
 [tool.isort]
