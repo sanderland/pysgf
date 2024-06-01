@@ -1,12 +1,12 @@
 [tool.poetry]
 name = "pysgf"
-version = "0.8.0"
+version = "0.9.0"
 description = "Simple SGF parser"
 authors = ["Sander Land"]
 
 [tool.black]
 line-length=120
-target_version = ['py37']
+target_version = ['py39']
 include = '\.py$'
 
 [tool.isort]
@@ -17,15 +17,15 @@ skip_glob = '^((?!py$).)*$'    # sort all Python files
 known_third_party = []
 
 [tool.poetry.dependencies]
-python = "^3.6"
+python = "^3.9"
 
-[tool.poetry.dev-dependencies]
-black = "^19.10b0"
-isort = "^4.3"
-pytest = "^5.2"
-sphinx = "^2.4.4"
-sphinx-rtd-theme = "^0.4.3"
-twine = "^3.1.1"
+[tool.poetry.group.dev.dependencies]
+black = "^24.4.2"
+isort = "^5.13.2"
+pytest = "^8.2.1"
+sphinx = "^7.3.7"
+sphinx-rtd-theme = "^2.0.0"
+twine = "^5.1.0"
 
 [build-system]
 requires = ["poetry-core>=1.1.0"]
