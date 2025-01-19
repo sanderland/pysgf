@@ -310,7 +310,7 @@ class SGF:
 
     def _parse_branch(self, current_move: SGFNode):
         while self.ix < len(self.contents):  # https://xkcd.com/1171/
-            match = re.match(r"\s*(?:\(|\)|;|(?:(\w+)((?:\[.*?(?<!\\)\]\s*)+)))", self.contents[self.ix :], re.DOTALL)
+            match = re.match(r"\s*(?:\(|\)|;|(?:(\w+)\s*((?:\[.*?(?<!\\)\]\s*)+)))", self.contents[self.ix :], re.DOTALL)
             if not match:
                 break
             self.ix += len(match[0])
