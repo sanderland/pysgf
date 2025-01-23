@@ -80,3 +80,8 @@ def test_pandanet():
 def test_ogs():
     file = os.path.join(os.path.dirname(__file__), "data/ogs.sgf")
     tree = SGF.parse_file(file)
+
+
+def test_kgs():
+    file = os.path.join(os.path.dirname(__file__), "data/kgs.sgf")
+    tree = SGF.parse_file(file)
