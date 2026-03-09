@@ -1,1 +1,1 @@
-from pysgf.parser import SGF, Move, ParseError, SGFNode
+from pysgf.parser import BaseGoGame, BaseGoNode, GoGame, GoNode, Move, ParseError

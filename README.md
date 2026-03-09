@@ -4,16 +4,16 @@
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)
 
 
-PySGF is a lightweight but powerful parser for the Go SGF Format.
+PySGF is a lightweight parser for Go game records.
 
 ## Quickstart
 
 ```python
-from pysgf import SGF
+from pysgf import GoGame
 # parse either a string ..
-root = SGF.parse(input_sgf)
-# or pass a file name. It will try to detect the encoding specified in the SGF file
-root = SGF.parse_file(input_file_name)
+root = GoGame.parse(input_sgf)
+# or pass a file name. It will try to detect the encoding specified in the record file
+root = GoGame.parse_file(input_file_name)
 # all properties are stored as lists, but you can ask for the first
 root.get_list_property('AB')
 root.get_property('KM')

@@ -16,16 +16,16 @@ To install this package:
 Documentation
 ^^^^^^^^^^^^^
 
-SGF
----
-.. autoclass:: pysgf.SGF
+GoGame
+------
+.. autoclass:: pysgf.GoGame
     :members:
     :undoc-members:
     :member-order: bysource
 
-SGFNode
--------
-.. autoclass:: pysgf.SGFNode
+GoNode
+------
+.. autoclass:: pysgf.GoNode
     :members:
     :undoc-members:
     :member-order: bysource
