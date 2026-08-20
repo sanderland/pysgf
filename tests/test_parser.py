@@ -1,4 +1,5 @@
 import os
+import re
 
 import pytest
 
@@ -164,6 +165,38 @@ def test_ngf():
         "SZ": [19],
     } == root.properties
     assert "pq" == root.children[0].get_property("W")
+
+
+def test_gib_malformed_ini_line():
+    """A truncated INI line must be skipped, not raise out of the parser.
+
+    The handler used to catch ParseError, while int()/indexing raise
+    ValueError/IndexError -- so it was unreachable and the exception escaped.
+    """
+    with open(data_file("test.gib"), encoding="utf-8", errors="ignore") as f:
+        gib = f.read()
+
+    for broken in ["INI 0 1", "INI 0 1 0 x", "INI"]:
+        mangled = re.sub(r"^INI .*$", broken, gib, flags=re.MULTILINE)
+        root = GoGame.parse_gib(mangled)  # must not raise
+        assert "pd" == root.children[0].get_property("B")  # moves still parsed
+
+
+def test_gib_malformed_metadata_lines():
+    """Unparseable komi/date/result metadata is skipped without raising."""
+    gib = "\n".join(
+        [
+            "\\[GAMEBLACKNAME=kim (2D)\\]",
+            "\\[GAMEWHITENAME=wildsim1 (2D)\\]",
+            "\\[GAMEINFOMAIN=GRLT:0,ZIPSU:x,GONGJE:oops,\\]",
+            "\\[GAMETAG=Cxxxx:yy:zz,W:nope,G:nope,\\]",
+            "STO 0 1 1 15 3",
+        ]
+    )
+    root = GoGame.parse_gib(gib)  # must not raise
+    assert "kim" == root.get_property("PB")
+    assert root.get_property("KM") is None
+    assert root.get_property("DT") is None
 
 
 def test_unsupported_extension():
