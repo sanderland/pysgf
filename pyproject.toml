@@ -1,9 +1,9 @@
 [project]
 name = "pysgf"
-version = "0.9.0"
-description = "Simple SGF parser"
+version = "1.0.0"
+description = "Simple parser for Go game records (SGF, NGF, GIB)"
 authors = [{ name = "Sander Land" }]
-requires-python = ">=3.9"
+requires-python = ">=3.11"
 readme = "README.md"
 dependencies = [
     "chardet>=5.2.0,<6",
@@ -20,6 +20,7 @@ default-groups = ["dev"]
 
 [tool.black]
 line-length = 120
+target-version = ["py311"]
 
 [build-system]
 requires = ["hatchling"]

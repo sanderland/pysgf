@@ -578,7 +578,7 @@ class BaseGoGame(Generic[NodeT]):
             try:
                 grlt = int(re.search(grlt_regex, line).group(1))
                 zipsu = int(re.search(zipsu_regex, line).group(1))
-            except Exception:
+            except (AttributeError, ValueError):
                 return ""
             return gib_make_result(grlt, zipsu)
 
@@ -607,14 +607,14 @@ class BaseGoGame(Generic[NodeT]):
                         komi = int(re.search(r"GONGJE:(\d+),", line).group(1)) / 10
                         if komi:
                             root.set_property("KM", komi)
-                    except Exception:
+                    except (AttributeError, ValueError):
                         pass
             if line.startswith("\\[GAMETAG="):
                 if "DT" not in root.properties:
                     try:
                         match = re.search(r"C(\d\d\d\d):(\d\d):(\d\d)", line)
                         root.set_property("DT", f"{match.group(1)}-{match.group(2)}-{match.group(3)}")
-                    except Exception:
+                    except (AttributeError, ValueError):
                         pass
                 if "RE" not in root.properties:
                     result = gib_get_result(line, r",W(\d+),", r",Z(\d+),")
@@ -625,7 +625,7 @@ class BaseGoGame(Generic[NodeT]):
                         komi = int(re.search(r",G(\d+),", line).group(1)) / 10
                         if komi:
                             root.set_property("KM", komi)
-                    except Exception:
+                    except (AttributeError, ValueError):
                         pass
             if line[0:3] == "INI":
                 if node is not root:
@@ -633,7 +633,7 @@ class BaseGoGame(Generic[NodeT]):
                 setup = line.split()
                 try:
                     handicap = int(setup[3])
-                except ParseError:
+                except (ValueError, IndexError):  # truncated or malformed INI line
                     continue
                 if handicap < 0 or handicap > 9:
                     raise ParseError(f"Handicap {handicap} out of range")
