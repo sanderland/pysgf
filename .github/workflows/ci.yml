@@ -2,9 +2,14 @@ name: ci
 
 on:
   push:
-    branches: ["main", "master", "v1"]
+    branches: [main, master]
   pull_request:
   workflow_dispatch:
+    inputs:
+      publish:
+        description: Publish to PyPI
+        type: boolean
+        default: false
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -16,7 +21,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ["3.9", "3.12", "3.13"]
+        python-version: ["3.11", "3.12", "3.13", "3.14", "3.15"]
 
     steps:
       - uses: actions/checkout@v4
@@ -24,11 +29,12 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
+          allow-prereleases: true
 
       - uses: astral-sh/setup-uv@v5
 
       - name: Install dependencies
-        run: uv sync --group dev
+        run: uv sync --frozen --all-groups
 
       - name: Check formatting
         run: uv run black --check .
@@ -38,3 +44,24 @@ jobs:
 
       - name: Build package
         run: uv build
+
+      - name: Build docs
+        run: uv run make -C docs html
+
+  publish:
+    needs: test
+    if: github.event_name == 'workflow_dispatch' && inputs.publish
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v5
+
+      - name: Publish to PyPI
+        run: uv publish
+        env:
+          UV_PUBLISH_TOKEN: ${{ secrets.PYPI_TOKEN }}

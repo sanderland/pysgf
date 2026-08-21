@@ -1,5 +1,5 @@
 # PySGF
-[![Release Status](https://github.com/sanderland/pysgf/workflows/release/badge.svg)](https://github.com/sanderland/pysgf/actions)
+[![CI](https://github.com/sanderland/pysgf/actions/workflows/ci.yml/badge.svg)](https://github.com/sanderland/pysgf/actions/workflows/ci.yml)
 [![PyPI version](https://badge.fury.io/py/pysgf.svg)](https://pypi.org/project/pysgf/)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)
 

@@ -14,6 +14,10 @@ dev = [
     "black>=24.8.0,<25",
     "pytest>=8.0,<9",
 ]
+docs = [
+    "sphinx>=8.0,<9",
+    "sphinx-rtd-theme>=3.0,<4",
+]
 
 [tool.uv]
 default-groups = ["dev"]
