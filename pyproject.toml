@@ -1,32 +1,34 @@
-[tool.poetry]
+[project]
 name = "pysgf"
-version = "0.9.0"
-description = "Simple SGF parser"
-authors = ["Sander Land"]
+version = "1.0.0"
+description = "Simple parser for Go game records (SGF, NGF, GIB)"
+authors = [{ name = "Sander Land" }]
+requires-python = ">=3.11"
+readme = "README.md"
+dependencies = [
+    "chardet>=5.2.0",
+]
 
-[tool.black]
-line-length=120
-target_version = ['py39']
-include = '\.py$'
+[dependency-groups]
+dev = [
+    "pytest>=9",
+    "ruff>=0.12",
+]
+docs = [
+    "sphinx>=9.0,<10",
+    "sphinx-rtd-theme>=3.1,<4",
+]
 
-[tool.isort]
-line_length=120                # corresponds to -w  flag
-multi_line_output=3            # corresponds to -m  flag
-include_trailing_comma=true    # corresponds to -tc flag
-skip_glob = '^((?!py$).)*$'    # sort all Python files
-known_third_party = []
+[tool.uv]
+default-groups = ["dev"]
 
-[tool.poetry.dependencies]
-python = "^3.9"
+[tool.ruff]
+line-length = 120
+target-version = "py311"
 
-[tool.poetry.group.dev.dependencies]
-black = "^24.4.2"
-isort = "^5.13.2"
-pytest = "^8.2.1"
-sphinx = "^7.3.7"
-sphinx-rtd-theme = "^2.0.0"
-twine = "^5.1.0"
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F", "I"]
 
 [build-system]
-requires = ["poetry-core>=1.1.0"]
-build-backend = "poetry.core.masonry.api"
+requires = ["hatchling"]
+build-backend = "hatchling.build"
