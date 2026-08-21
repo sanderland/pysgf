@@ -51,7 +51,7 @@ author = "Sander Land"
 # built documents.
 #
 # The short X.Y version.
-version = re.search(r'^version\s*=\s*"(.*)"', open("../../pyproject.toml").read(), re.M).group(1)
+version = re.search(r'^version\s*=\s*"(.*)"', open("../../pyproject.toml").read(), re.MULTILINE).group(1)
 # The full version, including alpha/beta/rc tags.
 release = version
 

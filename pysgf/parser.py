@@ -8,14 +8,11 @@ from typing import Any, ClassVar, Generic, Self, TypeVar, cast
 
 import chardet
 
-
 NodeT = TypeVar("NodeT", bound="BaseGoNode[Any]")
 
 
 class ParseError(Exception):
     """Exception raised on a parse error"""
-
-    pass
 
 
 class Move:
@@ -481,7 +478,7 @@ class BaseGoGame(Generic[NodeT]):
                 values = re.split(r"\]\s*\[", value)
                 current_move.add_list_property(property, [GoNode._unescape_value(v) for v in values])
         if self.ix < len(self.contents):
-            raise ParseError(f"Parse Error: unexpected character at {self.contents[self.ix:self.ix+25]}")
+            raise ParseError(f"Parse Error: unexpected character at {self.contents[self.ix : self.ix + 25]}")
         raise ParseError("Parse Error: expected ')' at end of input.")
 
     @classmethod
