@@ -56,4 +56,23 @@ root = MyGame.parse(input_sgf)  # -> MyNode
 Python 3.11 or newer.
 
 ## Documentation
-For documentation, run `make html` in the `docs` directory.
+
+Building the documentation needs the `docs` dependency group. Install it first —
+building against a system-wide Sphinx (e.g. Debian/Ubuntu's `python3-sphinx`) will
+fail with `no theme named 'sphinx_rtd_theme' found`, since the packaged theme is
+usually missing or too old:
+
+```bash
+uv sync --group docs
+uv run make -C docs html
+```
+
+Without uv:
+
+```bash
+pip install -e . "sphinx>=9,<10" "sphinx-rtd-theme>=3.1,<4"
+make -C docs html
+```
+
+Note the `-e .` — `autodoc` imports `pysgf` to document it, so the package has to be
+installed in the same environment as Sphinx. The generated HTML lands in `docs/build/html`.
