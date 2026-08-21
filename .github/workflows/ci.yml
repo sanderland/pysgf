@@ -61,6 +61,9 @@ jobs:
 
       - uses: astral-sh/setup-uv@v5
 
+      - name: Build package
+        run: uv build
+
       - name: Publish to PyPI
         run: uv publish
         env:

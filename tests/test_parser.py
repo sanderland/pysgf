@@ -199,6 +199,13 @@ def test_gib_malformed_metadata_lines():
     assert root.get_property("DT") is None
 
 
+@pytest.mark.parametrize("broken_line", ["STO", "STO 0 1", "STO 0 1 1 x 3"])
+def test_gib_malformed_sto_line(broken_line):
+    gib = f"STO 0 1 1 15 3\n{broken_line}"
+    with pytest.raises(ParseError, match="Malformed STO line"):
+        GoGame.parse_gib(gib)
+
+
 def test_unsupported_extension():
     with pytest.raises(ParseError):
         GoGame.from_string("(;GM[1])", ext="xyz")
@@ -214,6 +221,11 @@ def test_foxwq():
         while node.children:
             assert 1 == len(node.children)
             node = node.children[0]
+
+
+def test_foxwq_without_ruleset_uses_default_komi():
+    root = GoGame.parse("(;GM[1]AP[foxwq])")
+    assert 6.5 == root.komi
 
 
 def test_komi_and_handicap():

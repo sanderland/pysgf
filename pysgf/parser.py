@@ -441,7 +441,7 @@ class BaseGoGame(Generic[NodeT]):
         if "foxwq" in root.get_list_property("AP", []):
             if int(root.get_property("HA", 0)) >= 1:
                 corrected_komi = 0.5
-            elif root.get_property("RU").lower() in ["chinese", "cn"]:
+            elif root.get_property("RU", "japanese").lower() in ["chinese", "cn"]:
                 corrected_komi = 7.5
             else:
                 corrected_komi = 6.5
@@ -638,16 +638,16 @@ class BaseGoGame(Generic[NodeT]):
                     root.set_property("HA", handicap)
                     root.place_handicap_stones(handicap, tygem=True)
             if line[0:3] == "STO":
-                move = line.split()
-                key = "B" if move[3] == "1" else "W"
                 try:
+                    move = line.split()
+                    key = "B" if move[3] == "1" else "W"
                     x = int(move[4])
                     y = 18 - int(move[5])
-                    if not (0 <= x < 19 and 0 <= y < 19):
-                        raise ParseError(f"Coordinates for move ({x},{y}) out of range on line {line}")
-                    value = Move(coords=(x, y)).sgf(board_size=(19, 19))
-                except IndexError:
-                    continue
+                except (IndexError, ValueError) as exc:
+                    raise ParseError(f"Malformed STO line: {line}") from exc
+                if not (0 <= x < 19 and 0 <= y < 19):
+                    raise ParseError(f"Coordinates for move ({x},{y}) out of range on line {line}")
+                value = Move(coords=(x, y)).sgf(board_size=(19, 19))
                 node = cls.NODE_TYPE(parent=node)
                 node.set_property(key, value)
 
